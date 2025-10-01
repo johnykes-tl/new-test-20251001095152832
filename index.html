@@ -1,11 +1,156 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Painting App</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎨 Simple Painting App</h1>
+    </header>
+    <div class="toolbar" role="toolbar" aria-label="Painting tools and controls">
+      <div class="tool-group">
+        <label for="colorPicker" aria-describedby="colorHelp">Color:</label>
+        <div class="color-controls">
+          <input type="color" id="colorPicker" value="#000000" aria-label="Select painting color">
+          <div id="currentColorDisplay" aria-label="Current selected color preview" class="current-color-display"></div>
+        </div>
+      </div>
+      <div class="tool-group">
+        <label for="brushSize" aria-describedby="sizeHelp">Brush Size:</label>
+        <input type="range" id="brushSize" min="1" max="50" value="5" aria-label="Adjust brush size">
+        <span id="brushSizeValue" aria-live="polite">5</span>
+      </div>
+      <div class="tool-group">
+        <label>Tools:</label>
+        <div class="tool-controls">
+          <input type="radio" id="brushTool" name="drawingTool" value="brush" checked>
+          <label for="brushTool" class="tool-label" tabindex="0" role="button" aria-pressed="true" aria-label="Brush tool">🖌️ Brush</label>
+          <input type="radio" id="lineTool" name="drawingTool" value="line">
+          <label for="lineTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Line tool">📏 Line</label>
+          <input type="radio" id="rectangleTool" name="drawingTool" value="rectangle">
+          <label for="rectangleTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Rectangle tool">⬜ Rectangle</label>
+          <input type="radio" id="circleTool" name="drawingTool" value="circle">
+          <label for="circleTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Circle tool">⭕ Circle</label>
+          <input type="radio" id="eraserTool" name="drawingTool" value="eraser">
+          <label for="eraserTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Eraser tool">🧽 Eraser</label>
+          <input type="radio" id="textTool" name="drawingTool" value="text">
+          <label for="textTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Text tool">📝 Text</label>
+          <input type="radio" id="panTool" name="drawingTool" value="pan">
+          <label for="panTool" class="tool-label" tabindex="0" role="button" aria-pressed="false" aria-label="Pan tool">👆 Pan</label>
+        </div>
+      </div>
+      <div class="tool-group" id="brushShapeGroup">
+        <label>Brush Shape:</label>
+        <div class="shape-controls">
+          <input type="radio" id="roundShape" name="brushShape" value="round" checked>
+          <label for="roundShape" class="shape-label" tabindex="0" role="button" aria-pressed="true" aria-label="Round brush shape">● Round</label>
+          <input type="radio" id="squareShape" name="brushShape" value="square">
+          <label for="squareShape" class="shape-label" tabindex="0" role="button" aria-pressed="false" aria-label="Square brush shape">■ Square</label>
+          <input type="radio" id="triangleShape" name="brushShape" value="triangle">
+          <label for="triangleShape" class="shape-label" tabindex="0" role="button" aria-pressed="false" aria-label="Triangle brush shape">▲ Triangle</label>
+        </div>
+      </div>
+      <div class="tool-group" id="shapeOptionsGroup" style="display: none;">
+        <label>Shape Style:</label>
+        <div class="shape-style-controls">
+          <input type="radio" id="fillShape" name="shapeStyle" value="fill" checked>
+          <label for="fillShape" class="style-label" tabindex="0" role="button" aria-pressed="true" aria-label="Fill shape style">Fill</label>
+          <input type="radio" id="strokeShape" name="shapeStyle" value="stroke">
+          <label for="strokeShape" class="style-label" tabindex="0" role="button" aria-pressed="false" aria-label="Outline shape style">Outline</label>
+          <input type="radio" id="bothShape" name="shapeStyle" value="both">
+          <label for="bothShape" class="style-label" tabindex="0" role="button" aria-pressed="false" aria-label="Fill and outline shape style">Both</label>
+        </div>
+      </div>
+      <div class="tool-group" id="textOptionsGroup" style="display: none;">
+        <label>Text Options:</label>
+        <div class="text-controls">
+          <input type="text" id="textInput" placeholder="Enter text" aria-label="Text to place on canvas" maxlength="100">
+          <select id="fontFamily" aria-label="Select font family">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Courier New">Courier New</option>
+          </select>
+          <input type="number" id="fontSize" min="10" max="72" value="20" aria-label="Font size">
+        </div>
+      </div>
+      <div class="tool-group" id="patternOptionsGroup">
+        <label>Fill Type:</label>
+        <div class="pattern-controls">
+          <input type="radio" id="solidFill" name="fillType" value="solid" checked>
+          <label for="solidFill" class="pattern-label" tabindex="0" role="button" aria-pressed="true" aria-label="Solid fill">Solid</label>
+          <input type="radio" id="stripesPattern" name="fillType" value="stripes">
+          <label for="stripesPattern" class="pattern-label" tabindex="0" role="button" aria-pressed="false" aria-label="Stripes pattern">Stripes</label>
+          <input type="radio" id="dotsPattern" name="fillType" value="dots">
+          <label for="dotsPattern" class="pattern-label" tabindex="0" role="button" aria-pressed="false" aria-label="Dots pattern">Dots</label>
+          <input type="radio" id="checkerPattern" name="fillType" value="checker">
+          <label for="checkerPattern" class="pattern-label" tabindex="0" role="button" aria-pressed="false" aria-label="Checker pattern">Checker</label>
+          <input type="radio" id="gradientFill" name="fillType" value="gradient">
+          <label for="gradientFill" class="pattern-label" tabindex="0" role="button" aria-pressed="false" aria-label="Gradient fill">Gradient</label>
+          <input type="file" id="patternUpload" accept="image/*" style="display: none;">
+          <label for="uploadPattern" style="display: none;"></label>
+        </div>
+      </div>
+      <div class="tool-group" id="gradientOptionsGroup" style="display: none;">
+        <label>Gradient Options:</label>
+        <div class="gradient-controls">
+          <input type="radio" id="linearGradient" name="gradientType" value="linear" checked>
+          <label for="linearGradient" class="gradient-label" tabindex="0" role="button" aria-pressed="true" aria-label="Linear gradient">Linear</label>
+          <input type="radio" id="radialGradient" name="gradientType" value="radial">
+          <label for="radialGradient" class="gradient-label" tabindex="0" role="button" aria-pressed="false" aria-label="Radial gradient">Radial</label>
+          <select id="gradientDirection" aria-label="Select gradient direction">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+            <option value="diagonal">Diagonal</option>
+          </select>
+          <div id="gradientColors" class="gradient-colors">
+            <input type="color" class="gradientColor" value="#000000">
+            <input type="color" class="gradientColor" value="#ffffff">
+          </div>
+          <button id="addColorStop">Add Color Stop</button>
+        </div>
+      </div>
+      <div class="tool-group">
+        <button id="zoomInButton" class="action-btn" aria-label="Zoom in">🔍+</button>
+        <button id="zoomOutButton" class="action-btn" aria-label="Zoom out">🔍-</button>
+        <button id="resetZoomButton" class="action-btn" aria-label="Reset zoom and pan">🏠</button>
+      </div>
+      <div class="tool-group">
+        <button id="undoButton" class="action-btn tool-button" disabled aria-label="Undo last action">
+          <span class="btn-icon">↶</span>
+          <span class="btn-text">Undo</span>
+        </button>
+        <button id="redoButton" class="action-btn tool-button" disabled aria-label="Redo last undone action">
+          <span class="btn-icon">↷</span>
+          <span class="btn-text">Redo</span>
+        </button>
+      </div>
+      <div class="tool-group">
+        <button id="clearCanvas" class="action-btn" aria-label="Clear entire canvas">
+          <span class="btn-icon">��️</span>
+          <span class="btn-text">Clear</span>
+        </button>
+        <button id="downloadCanvas" class="action-btn" aria-label="Download canvas as image">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">Download</span>
+        </button>
+      </div>
+    </div>
+    <div class="canvas-container" aria-label="Drawing canvas">
+      <canvas id="paintCanvas" width="800" height="600" aria-label="Main painting canvas"></canvas>
+      <canvas id="tempCanvas" width="800" height="600" aria-label="Temporary drawing preview canvas"></canvas>
+    </div>
+  </div>
+
+  <footer>
+    <div class="copyright-bar">
+      AI vibe coded development by <a href="https://biela.dev/" target="_blank" rel="noopener noreferrer">Biela.dev</a>, powered by <a href="https://teachmecode.ae/" target="_blank" rel="noopener noreferrer">TeachMeCode® Institute</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
