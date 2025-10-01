@@ -1,0 +1,82 @@
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.todo-item span {
+  cursor: pointer;
+  flex: 1;
+}
+
+.todo-item.completed span {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.copyright-bar {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666;
+  border-top: 1px solid #ddd;
+}
+
+.copyright-bar a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.copyright-bar a:hover {
+  text-decoration: underline;
